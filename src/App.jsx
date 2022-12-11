@@ -10,13 +10,16 @@ function App() {
     <Box height="100vh" display="flex" flexDirection="column" width="100vw" >
       <Grid container spacing={2}>
         <Grid xs={12} height="5vh" bgcolor="yellow">
+          Something
+        </Grid>
+        <Grid xs={4} height="95vh">
           <EnterpriseList></EnterpriseList>
         </Grid>
-        <Grid xs={6} height="95vh" bgcolor="red">
-          
-        </Grid>
-        <Grid xs={6} height="95vh" bgcolor="blue">
+        <Grid xs={4} height="95vh" bgcolor="blue">
           <div>Hello</div>
+        </Grid>
+        <Grid xs={4} height="95vh" bgcolor="red">
+          <div>log</div>
         </Grid>
       </Grid>
     </Box>
