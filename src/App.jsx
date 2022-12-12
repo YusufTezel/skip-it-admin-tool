@@ -19,7 +19,7 @@ function App() {
         <Grid xs={4} height="95vh">
           <EnterpriseDetails></EnterpriseDetails>
         </Grid>
-        <Grid xs={4} height="95vh" bgcolor="red">
+        <Grid xs={4} height="95vh" bgcolor="black">
           <div>log</div>
         </Grid>
       </Grid>
