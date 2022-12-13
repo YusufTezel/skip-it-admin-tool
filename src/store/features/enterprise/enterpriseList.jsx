@@ -12,7 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 export function EnterpriseList() {
-    const elements = useSelector((state) => state.enterprise.enterprises)
+    const elements = useSelector((state) => state.enterprise.enterprises);
+    const inEditMode = useSelector((state) => state.enterprise.editMode);
     const selectedEnterprise = useSelector((state) => state.enterprise.selectedEnterprise)
     const dispatch = useDispatch()
 
@@ -45,11 +46,12 @@ export function EnterpriseList() {
                 justifyContent="center"
                 alignItems="center">
                 <Stack spacing={2} direction="row">
-                    <Button variant="contained" onClick={addNewEnterprise} color="success">Add new Enterprise</Button>
-                    <Button variant="contained" color="info">Add as a child to selected</Button>
+                    <Button disabled={inEditMode} variant="contained" onClick={addNewEnterprise} color="primary">Add new Enterprise</Button>
+                    <Button disabled={inEditMode} variant="contained" color="info">Add as a child to selected</Button>
                 </Stack>
             </Box>
-            <TreeView
+            <TreeView 
+                disableSelection
                 selected={selectedEnterprise.id}
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
