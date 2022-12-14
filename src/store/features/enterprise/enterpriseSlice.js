@@ -1,28 +1,5 @@
-import { createSlice, current } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import elements from './data'
-import { } from 'react-redux'
-
-let ex = {
-  id: "9fe8046e-7947-11ed-a1eb-0242ac120002",
-  name: "Tryg",
-  telephone: "70112020",
-  image: "http://something.sk",
-  buisnessArea: "insurance",
-  childs: [{
-    id: 1,
-    clickNumer: 0,
-    parentId: "9fe8046e-7947-11ed-a1eb-0242ac120002",
-    headerText: "English",
-    explanatoryText: "If you want to process in english",
-    waitDurationBeforeNavigationInSec: 2,
-    legalWarningText: undefined,
-    input: {
-      canTakeInput: true,
-      value: ""
-    },
-    icon: "http://www.lang.dk"
-  }]
-};
 
 const initialState = {
   enterprises: elements,
@@ -38,6 +15,7 @@ export const enterprise = createSlice({
     addEnterprise: (state, action) => {
       state.enterprises.push(action.payload);
       state.selectedEnterprise = action.payload;
+      state.editMode = true;
     },
     setSelectedEnterprise: (state, action) => {
       if (!state.editMode) {
@@ -55,8 +33,7 @@ export const enterprise = createSlice({
     },
     updateEnterprise: (state) => {
 
-      function traverse(id, enterprises) {
-
+      const traverse = (id, enterprises) => {
         for (let index = 0; index < enterprises.length; index++) {
           const element = enterprises[index];
           if (element.id === id) {
@@ -65,7 +42,7 @@ export const enterprise = createSlice({
           }
           traverse(id, element.childs)
         }
-      }
+      };
 
       traverse(state.selectedEnterprise.id, state.enterprises);
       state.editMode = false;

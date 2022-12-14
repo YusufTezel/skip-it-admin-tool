@@ -14,12 +14,12 @@ import { v4 as uuidv4 } from 'uuid';
 export function EnterpriseList() {
     const elements = useSelector((state) => state.enterprise.enterprises);
     const inEditMode = useSelector((state) => state.enterprise.editMode);
-    const selectedEnterprise = useSelector((state) => state.enterprise.selectedEnterprise)
-    const dispatch = useDispatch()
+    const selectedEnterprise = useSelector((state) => state.enterprise.selectedEnterprise);
+    const dispatch = useDispatch();
 
     const clicked = (item, event) => {
-        event.stopPropagation()
-        dispatch(setSelectedEnterprise(item))
+        event.stopPropagation();
+        dispatch(setSelectedEnterprise(item));
     };
 
     const renderTree = (node) => (
@@ -36,7 +36,7 @@ export function EnterpriseList() {
             name: "*NEW ENTERPRISE",
             childs: []
         };
-        dispatch(addEnterprise(newItem))
+        dispatch(addEnterprise(newItem));
     };
 
     return (

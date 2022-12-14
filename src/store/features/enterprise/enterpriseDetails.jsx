@@ -4,15 +4,14 @@ import { setEditModeState, updateSelectedItemName, updateEnterprise, cancelEnter
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { v4 as uuidv4 } from 'uuid';
 import TextField from '@mui/material/TextField';
 
 
 export function EnterpriseDetails() {
-    const id = useSelector((state) => state.enterprise.selectedEnterprise.id)
-    const name = useSelector((state) => state.enterprise.selectedEnterprise.name)
-    const inEditMode = useSelector((state) => state.enterprise.editMode)
-    const dispatch = useDispatch()
+    const id = useSelector((state) => state.enterprise.selectedEnterprise.id);
+    const name = useSelector((state) => state.enterprise.selectedEnterprise.name);
+    const inEditMode = useSelector((state) => state.enterprise.editMode);
+    const dispatch = useDispatch();
 
     const handleInputChangeName = (event) => {
         dispatch(updateSelectedItemName(event.target.value));
@@ -49,6 +48,7 @@ export function EnterpriseDetails() {
                         InputProps={{
                             readOnly: !inEditMode,
                         }}
+                        autoFocus
                         onChange={handleInputChangeName}
                         variant={inEditMode ? "standard" : "filled"}
                     />
