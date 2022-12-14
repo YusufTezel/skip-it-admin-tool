@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setEditModeState, updateSelectedItemName, updateEnterprise, cancelEnterpriseUpdate } from './enterpriseSlice'
+import { setEditModeState, updateSelectedItemName, updateEnterprise, cancelEnterpriseUpdate, deleteEnterpriseSubmenu } from './enterpriseSlice'
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -8,10 +8,10 @@ import TextField from '@mui/material/TextField';
 
 
 export function EnterpriseDetails() {
-    const id = useSelector((state) => state.enterprise.selectedEnterprise.id);
-    const name = useSelector((state) => state.enterprise.selectedEnterprise.name);
+    const enterprise = useSelector((state) => state.enterprise.selectedEnterprise);
     const inEditMode = useSelector((state) => state.enterprise.editMode);
     const dispatch = useDispatch();
+    const canBeDeleted = enterprise.childs.length != 0;
 
     const handleInputChangeName = (event) => {
         dispatch(updateSelectedItemName(event.target.value));
@@ -26,25 +26,25 @@ export function EnterpriseDetails() {
                     alignItems="center">
                     <Stack spacing={2} direction="row">
                         <Button disabled={inEditMode} onClick={() => dispatch(setEditModeState(true))} variant="contained" color="primary">Edit selected item</Button>
-                        <Button disabled={inEditMode} variant="contained" color="error">Delete selected item</Button>
+                        <Button disabled={inEditMode || canBeDeleted} onClick={() => dispatch(deleteEnterpriseSubmenu())} variant="contained" color="error">Delete selected item</Button>
                     </Stack>
                 </Box>
                 <Stack spacing={2} direction="column">
                     <TextField
-                        id="filled-read-only-input"
-                        label="Id"
+                        id="id-no-edit"
+                        label="id"
                         required={true}
-                        value={id}
+                        value={enterprise.id}
                         InputProps={{
                             readOnly: true,
                         }}
                         variant="filled"
                     />
                     <TextField
-                        id="filled-read-only-inputd"
+                        id="name-edit"
                         label="Name"
                         required={true}
-                        value={name}
+                        value={enterprise.name}
                         InputProps={{
                             readOnly: !inEditMode,
                         }}

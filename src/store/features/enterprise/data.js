@@ -1,5 +1,6 @@
 let elements = [{
     name: "Tryg",
+    root: true,
     id: "9c4347f6-7ab9-11ed-a1eb-0242ac120002",
     telephone: "70112020",
     openingHours: [
@@ -29,6 +30,7 @@ let elements = [{
     }],
   }, {
     name: "Danske bank",
+    root: true,
     telephone: "72304050",
     id: "bf6b3182-e919-4114-912f-45d6b6cbe5cd",
     childs: [{
