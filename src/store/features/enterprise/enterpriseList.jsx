@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 
 
 export function EnterpriseList() {
-    const elements = useSelector((state) => state.enterprise.enterprises);
+    const elements = useSelector((state) => state.enterprise.enterprises.children);
     const inEditMode = useSelector((state) => state.enterprise.editMode);
     const selectedEnterprise = useSelector((state) => state.enterprise.selectedEnterprise);
     const dispatch = useDispatch();
@@ -25,7 +25,7 @@ export function EnterpriseList() {
     const renderTree = (node, idArray) => (
         <TreeItem key={node.id} nodeId={node.id} label={node.name} onMouseUp={(e) => clicked(node, [...idArray, node.id], e)}>
           {Array.isArray(node.childs)
-            ? node.childs.map((item) => renderTree(item, [...idArray, node.id]))
+            ? node.children.map((item) => renderTree(item, [...idArray, node.id]))
             : null}
         </TreeItem>
     );

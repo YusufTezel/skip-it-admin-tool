@@ -1,58 +1,46 @@
-import { current } from '@reduxjs/toolkit';
-import { createSlice } from '@reduxjs/toolkit'
-import elements from './data'
+import { createSlice, current } from '@reduxjs/toolkit'
+import data from './data'
+import { v4 as uuidv4 } from 'uuid';
+import { findAndDeleteFirst } from 'obj-traverse/lib/obj-traverse';
 
 const initialState = {
-  enterprises: elements,
-  selectedEnterprise: elements[0],
-  defaultValuesForEnterpriseInEditMode: undefined,
-  editMode: false
+  enterprises: data.enterprises,
+  selectedEnterprise: data.enterprises.children[0],
+  selectedEnterpriseDefaultvalues: null,
+  inEditmode: false
 };
 
 export const enterprise = createSlice({
   name: 'enterprise',
   initialState,
   reducers: {
-    addEnterprise: (state, action) => {
-      state.enterprises.push(action.payload);
-      state.selectedEnterprise = action.payload;
-      state.editMode = true;
+    addEnterprise: (state) => {
+      let newItem = {
+        id: uuidv4(),
+        name: "*NEW ENTERPRISE",
+        childs: []
+      };
+      state.enterprises.children.push(newItem);
+      state.selectedEnterprise = newItem;
+      state.inEditmode = true;
+    },
+    addSubmenu: (state) => {
+
     },
     setSelectedEnterprise: (state, action) => {
-      if (!state.editMode) {
+      if (!state.inEditmode) {
         state.selectedEnterprise = action.payload;
       }
     },
     deleteEnterpriseSubmenu: (state) => {
-      let elementBefore = undefined;
-      let elementChildOf = undefined;
-
-      const traverse = (id, enterprises) => {
-        for (let index = 0; index < enterprises.length; index++) {
-          const element = enterprises[index];
-          if (element.id === id && !element.root) {
-            if(elementBefore) {
-              console.log(current(elementBefore))
-              console.log(current(state.selectedEnterprise))
-              state.selectedEnterprise = elementChildOf;
-              if(elementChildOf) {
-                elementChildOf.childs = elementChildOf.childs.filter((child) => child.id !== id);
-              }
-            }
-            return;
-          }
-          elementBefore = element;
-          if(element.childs.length > 0 && element.childs.find((child) => child.id === id)) {
-            elementChildOf = elementBefore;
-          }
-          traverse(id, element.childs);
-        }
-      };
-      traverse(state.selectedEnterprise.id, state.enterprises);
+      for (let index = 0; index < state.enterprises.length; index++) {
+        const element = state.enterprises[index];
+        if(findAndDeleteFirst(element, 'children', {id: state.selectedEnterprise.id})) return;
+      }
     },
     setEditModeState: (state, action) => {
-      state.editMode = action.payload;
-      if(state.editMode) {
+      state.inEditmode = action.payload;
+      if(state.inEditmode) {
         state.defaultValuesForEnterpriseInEditMode = state.selectedEnterprise;
       }
     },
@@ -73,16 +61,20 @@ export const enterprise = createSlice({
       };
 
       traverse(state.selectedEnterprise.id, state.enterprises);
-      state.editMode = false;
+      state.inEditmode = false;
     },
-    cancelEnterpriseUpdate: (state) => {
-      state.selectedEnterprise = state.defaultValuesForEnterpriseInEditMode;
-      state.defaultValuesForEnterpriseInEditMode = undefined;
-      state.editMode = false;
+    cancelEnterpriseUpdate: (state, action) => {
+      if(state.defaultValuesForEnterpriseInEditMode) {
+        state.selectedEnterprise = state.defaultValuesForEnterpriseInEditMode;
+        state.defaultValuesForEnterpriseInEditMode = undefined;
+      }
+      state.inEditmode = false;
     }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addEnterprise, setSelectedEnterprise, setEditModeState, updateSelectedItemName, updateEnterprise, cancelEnterpriseUpdate, deleteEnterpriseSubmenu } = enterprise.actions;
+export const { addEnterprise, setSelectedEnterprise, setEditModeState, 
+  updateSelectedItemName, updateEnterprise, cancelEnterpriseUpdate, 
+  deleteEnterpriseSubmenu, addSubmenu } = enterprise.actions;
 export default enterprise.reducer;

@@ -9,9 +9,9 @@ import TextField from '@mui/material/TextField';
 
 export function EnterpriseDetails() {
     const enterprise = useSelector((state) => state.enterprise.selectedEnterprise);
-    const inEditMode = useSelector((state) => state.enterprise.editMode);
+    const inEditMode = useSelector((state) => state.enterprise.inEditMode);
     const dispatch = useDispatch();
-    const canBeDeleted = enterprise.childs.length != 0;
+    const canBeDeleted = enterprise.children.length != 0;
 
     const handleInputChangeName = (event) => {
         dispatch(updateSelectedItemName(event.target.value));
