@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { addEnterprise, setSelectedEnterprise } from './enterpriseSlice'
+import { addEnterprise, setSelectedEnterprise, addSubmenu } from './enterpriseSlice'
 import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -8,7 +8,6 @@ import TreeItem from '@mui/lab/TreeItem';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { v4 as uuidv4 } from 'uuid';
 
 
 export function EnterpriseList() {
@@ -17,27 +16,19 @@ export function EnterpriseList() {
     const selectedEnterprise = useSelector((state) => state.enterprise.selectedEnterprise);
     const dispatch = useDispatch();
 
-    const clicked = (item, event) => {
+    const clicked = (item, idArray, event) => {
         event.stopPropagation();
+        console.log(idArray)
         dispatch(setSelectedEnterprise(item));
     };
 
-    const renderTree = (node) => (
-        <TreeItem key={node.id} nodeId={node.id} label={node.name} onMouseUp={(e) => clicked(node, e)}>
+    const renderTree = (node, idArray) => (
+        <TreeItem key={node.id} nodeId={node.id} label={node.name} onMouseUp={(e) => clicked(node, [...idArray, node.id], e)}>
           {Array.isArray(node.childs)
-            ? node.childs.map((item) => renderTree(item))
+            ? node.childs.map((item) => renderTree(item, [...idArray, node.id]))
             : null}
         </TreeItem>
     );
-
-    const addNewEnterprise = () => {
-        let newItem = {
-            id: uuidv4(),
-            name: "*NEW ENTERPRISE",
-            childs: []
-        };
-        dispatch(addEnterprise(newItem));
-    };
 
     return (
         <div>
@@ -46,8 +37,8 @@ export function EnterpriseList() {
                 justifyContent="center"
                 alignItems="center">
                 <Stack spacing={2} direction="row">
-                    <Button disabled={inEditMode} variant="contained" onClick={addNewEnterprise} color="primary">Add new Enterprise</Button>
-                    <Button disabled={inEditMode} variant="contained" color="info">Add as a child to selected</Button>
+                    <Button disabled={inEditMode} variant="contained" onClick={() => dispatch(addEnterprise())} color="primary">Add new Enterprise</Button>
+                    <Button disabled={inEditMode} variant="contained" onClick={() => dispatch(addSubmenu())} color="info">Add as a child to selected</Button>
                 </Stack>
             </Box>
             <TreeView 
@@ -56,7 +47,7 @@ export function EnterpriseList() {
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
                 style={{ height: "60vh", overflowX: 'hidden', marginTop: '7px', margin: '5px' }}>
-                {elements.map((node) => { return renderTree(node) })}
+                {elements.map((node) => { return renderTree(node, []) })}
             </TreeView>
         </div>
     )
